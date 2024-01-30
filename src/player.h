@@ -3,24 +3,52 @@
 
 #include <stdint.h>
 
-// Represents the state of a Player character
-typedef struct Player {
-    int32_t size; // width and height
-    int32_t ha;   // health and armor
+// Represents the state of a character
+typedef struct Character {
+    // Character size and model bitfield
+    // 1st octet is unreserved
+    // 2nd octet is reserved for character id
+    // 3rd octet is reserved for character height
+    // 4th octet is reserved for chatacter width
+    int64_t size;
+    // Character health (current and max), armor
+    // 1st octet is unreserved
+    // 2nd octet is reserved for character armor
+    // 3rd octet is reserved for character maximum health
+    // 4th octet is reserved for charecter current health
+    int64_t ha;   // health and armor
+    // Character damage stats
+    // first three octets are unreserved
+    // 4th octet is reserved for character damage
+    int64_t dmg;
+    // Character movement speed
     double speed;
-} Player;
+} Character;
 
-#define SIZE(w, h) ((w << 16) | h)
-#define HA(h, a) ((h << 16) | a)
+// --- Character model
 
-Player p = {
-    .size = SIZE(20, 40),
-    .ha = HA(100, 10),
-    .speed = 1.0
-};
+#define CH_WIDTH(c)    (c->ha & 0xFFFF)         // Get character cur health
+#define CH_HEIGHT(c)   ((c->ha >> 8) & 0xFFFF)  // Get character max health
+#define CH_MODEL_ID(c) ((c->ha >> 16) & 0xFFFF) // Get character armor
 
-#define Player_Health p.ha >> 16
-#define Player_Armor p.ha & 0xFFFF
-#define Player_Speed p.speed
+// !-- Character model
+
+#define CH_ATTACK(c) (c->dmg & 0xFFFF)          // Get character attack 
+
+// --- Health and Armor getting
+
+#define CH_CURHP(c) (c->ha & 0xFFFF)            // Get character cur health
+#define CH_MAXHP(c) ((c->ha >> 8) & 0xFFFF)     // Get character max health
+#define CH_ARMOR(c) ((c->ha >> 16) & 0xFFFF)    // Get character armor
+#define CH_SPEED(c) (c->speed)                  // Get character speed
+
+// !-- Health and Armot getting
+
+// --- Character fields setting
+
+#define CH_SIZE(id, width, height) ((id << 16) | (height << 8) | width)
+#define CH_HA(h, a) ((h << 16) | a)
+
+// !-- Character fields setting
 
 #endif

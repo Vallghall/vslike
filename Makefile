@@ -11,11 +11,8 @@ all: bin vslike
 
 .PHONY: vslike
 	
-vslike: *.o
-	cc -o ./bin/$@ $(CFLAGS) $(LIBS) $^
-
-%.o: %.c ./src/%.h
-	cc $(CFLAGS) $(INCLUDES) -c $^
+vslike: *.c $(shell find src -name \*.c)
+	cc -o ./bin/$@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 
 clean:
 	rm *.o
@@ -28,7 +25,7 @@ bin:
 raylib: lib include
 	cd ./vendor/raylib-5.0/src && \
 	make PLATFORM=PLATFORM_DESKTOP && \
-	ln -sf $@.h $(ROOT)/include/$@.h && \
+	cp $@.h $(ROOT)/include/$@.h && \
 	mv lib$@.a $(ROOT)/lib/ && \
 	rm *.o
 

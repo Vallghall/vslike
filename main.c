@@ -1,25 +1,28 @@
 #include "raylib.h"
-#include <stdio.h>
 #include "src/player.h"
 
-#define WIDTH 500
-#define HEIGHT 500
-#define TITLE "Game"
-
-char debug_buf[32];
+#define WIDTH 1000
+#define HEIGHT 1000
+#define TITLE "VSLike"
 
 int main() {
-    printf("Hellope");
+    Character Bob = {
+        .size = CH_SIZE(1, 20, 40),
+        .ha = CH_HA(100,10),
+        .speed = 2.0
+    };
+
     InitWindow(WIDTH, HEIGHT, TITLE);
 
     while (!WindowShouldClose()) {
         BeginDrawing();
             ClearBackground(RAYWHITE);
-            int err = sprintf(debug_buf, "Health: %i\nArmor: %i\n", Player_Health, Player_Armor);
-            if (err < 0) return 1;
+            
 
             DrawText(debug_buf, WIDTH/3, HEIGHT/2, 14, BLACK);
         EndDrawing();
     }
     
+
+    return 0;
 }
